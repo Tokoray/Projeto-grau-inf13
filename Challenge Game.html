@@ -1,0 +1,758 @@
+## codigo HTML Front
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎮 Arena de Desafios Animada</title>
+    <style>
+        :root {
+            --bg-gradient: linear-gradient(135deg, #060409 0%, #0b071e 50%, #030206 100%);
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.07);
+            --accent-primary: #8200ff;
+            --accent-secondary: #00f0ff;
+            --text-main: #f3f1f7;
+            --text-muted: #8b8599;
+            --success: #00ff87;
+            --warning: #ffb800;
+            --danger: #ff0055;
+            --neon-glow: 0 0 20px rgba(130, 0, 255, 0.3);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, -apple-system, sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Efeito de luzes de fundo (Animação de ambiente) */
+        body::before, body::after {
+            content: '';
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: var(--accent-primary);
+            filter: blur(140px);
+            opacity: 0.15;
+            z-index: -1;
+            animation: floatGlow 10s infinite alternate ease-in-out;
+        }
+        body::after {
+            background: var(--accent-secondary);
+            right: 10%;
+            top: 10%;
+            animation-delay: -5s;
+        }
+        @keyframes floatGlow {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(40px, 40px) scale(1.2); }
+        }
+
+        .container {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 28px;
+            padding: 40px;
+            width: 100%;
+            max-width: 620px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.6), inset 0 1px 1px rgba(255,255,255,0.1);
+            position: relative;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 24px;
+            background: linear-gradient(90deg, var(--accent-secondary), #b57cff, var(--accent-primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -1px;
+            animation: shineText 6s infinite linear;
+            background-size: 200% auto;
+        }
+        @keyframes shineText {
+            to { background-position: 200% center; }
+        }
+
+        h2, h3 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        /* Gerenciamento de Telas com transição suave */
+        .screen {
+            display: none;
+            opacity: 0;
+            transform: scale(0.96) translateY(10px);
+            transition: opacity 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .screen.active {
+            display: block;
+            opacity: 1;
+            transform: scale(1) translateY(0);
+        }
+
+        .form-group {
+            margin-bottom: 22px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        input {
+            width: 100%;
+            padding: 16px 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--glass-border);
+            border-radius: 14px;
+            color: #fff;
+            font-size: 1rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--accent-secondary);
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.25), inset 0 0 5px rgba(0, 240, 255, 0.1);
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        /* Botões Estilizados */
+        .btn {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, var(--accent-primary), #5700c7);
+            color: white;
+            border: none;
+            border-radius: 16px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 20px rgba(130, 0, 255, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: 0; left: -50%; width: 200%; height: 100%;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.1), transparent);
+            transform: skewX(-25deg);
+            transition: 0.75s;
+        }
+
+        .btn:hover::after { left: 120%; }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(130, 0, 255, 0.5);
+            filter: brightness(1.15);
+        }
+
+        .btn:active { transform: translateY(1px); }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            box-shadow: none;
+            color: var(--text-muted);
+        }
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.12);
+            color: #fff;
+            box-shadow: none;
+        }
+
+        /* Cards e Arena de Desafios */
+        .card-info {
+            background: rgba(255, 255, 255, 0.01);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 24px;
+            text-align: center;
+            position: relative;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.2);
+        }
+
+        .badge-time {
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-weight: 800;
+            background: rgba(130, 0, 255, 0.15);
+            border: 1px solid rgba(130, 0, 255, 0.3);
+            color: #b57cff;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 14px;
+            animation: pulseGlow 2s infinite;
+        }
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 0 0 rgba(130, 0, 255, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(130, 0, 255, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(130, 0, 255, 0); }
+        }
+
+        .player-name {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 12px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+        }
+
+        .desafio-box {
+            font-size: 1.35rem;
+            line-height: 1.6;
+            color: #fff;
+            margin: 24px 0;
+            font-weight: 500;
+            padding: 18px;
+            border-left: 4px solid var(--accent-secondary);
+            background: rgba(0, 240, 255, 0.03);
+            border-radius: 0 16px 16px 0;
+            text-align: left;
+        }
+
+        .pontos-badge {
+            font-size: 1.1rem;
+            color: var(--warning);
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        /* Componente de Timer Animado */
+        .timer-container {
+            margin: 20px 0 5px 0;
+        }
+
+        .timer-text {
+            font-size: 2.8rem;
+            font-weight: 900;
+            color: var(--accent-secondary);
+            font-variant-numeric: tabular-nums;
+            text-shadow: 0 0 15px rgba(0, 240, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .timer-text.critical {
+            color: var(--danger);
+            text-shadow: 0 0 20px rgba(255, 0, 85, 0.6);
+            animation: textBeat 0.5s infinite alternate ease-in-out;
+        }
+
+        @keyframes textBeat {
+            to { transform: scale(1.08); }
+        }
+
+        .progress-bar-bg {
+            width: 100%;
+            height: 8px;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 10px;
+            margin-top: 12px;
+            overflow: hidden;
+            border: 1px solid var(--glass-border);
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            width: 100%;
+            background: linear-gradient(90deg, var(--accent-secondary), var(--accent-primary));
+            border-radius: 10px;
+            transition: width 0.2s linear, background 0.3s ease;
+            box-shadow: 0 0 10px var(--accent-secondary);
+        }
+
+        .progress-bar-fill.critical {
+            background: linear-gradient(90deg, var(--danger), #ff5500);
+            box-shadow: 0 0 15px var(--danger);
+        }
+
+        /* Botões de Decisão */
+        .action-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 14px;
+            margin-top: 25px;
+        }
+        @media(min-width: 480px) {
+            .action-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+
+        .btn-action {
+            padding: 16px;
+            border-radius: 16px;
+            border: 1px solid transparent;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 0.95rem;
+        }
+
+        .btn-action:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+
+        .btn-success { background: rgba(0, 255, 135, 0.08); color: var(--success); border-color: rgba(0, 255, 135, 0.2); }
+        .btn-success:hover { background: var(--success); color: #000; box-shadow: 0 5px 20px rgba(0, 255, 135, 0.3); }
+
+        .btn-warning { background: rgba(255, 184, 0, 0.08); color: var(--warning); border-color: rgba(255, 184, 0, 0.2); }
+        .btn-warning:hover { background: var(--warning); color: #000; box-shadow: 0 5px 20px rgba(255, 184, 0, 0.3); }
+
+        .btn-danger { background: rgba(255, 0, 85, 0.08); color: var(--danger); border-color: rgba(255, 0, 85, 0.2); }
+        .btn-danger:hover { background: var(--danger); color: #fff; box-shadow: 0 5px 20px rgba(255, 0, 85, 0.3); }
+
+        /* Placar Dinâmico Animado */
+        .placar-container {
+            margin-top: 35px;
+            border-top: 1px solid var(--glass-border);
+            padding-top: 24px;
+        }
+
+        .placar-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 18px;
+            background: rgba(0, 0, 0, 0.15);
+            margin-bottom: 10px;
+            border-radius: 14px;
+            border: 1px solid var(--glass-border);
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+
+        .placar-item.lider {
+            border-color: rgba(255, 184, 0, 0.4);
+            background: linear-gradient(90deg, rgba(255, 184, 0, 0.04), rgba(0,0,0,0.2));
+            box-shadow: 0 4px 15px rgba(255, 184, 0, 0.05);
+            animation: leaderPulse 2s infinite alternate;
+        }
+        @keyframes leaderPulse {
+            to { border-color: rgba(255, 184, 0, 0.8); }
+        }
+
+        .dinamic-inputs {
+            max-height: 230px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+            padding-right: 6px;
+        }
+        .dinamic-inputs::-webkit-scrollbar { width: 6px; }
+        .dinamic-inputs::-webkit-scrollbar-thumb { background: var(--glass-border); border-radius: 10px; }
+
+        .podio-final {
+            text-align: center;
+            font-size: 1.8rem;
+            color: var(--warning);
+            margin: 25px 0;
+            font-weight: 800;
+            text-shadow: 0 0 20px rgba(255, 184, 0, 0.3);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div id="screen-setup" class="screen active">
+        <h1>🎮 Jogo do Desafio</h1>
+        <h2>Configuração Inicial</h2>
+        <div class="form-group">
+            <label for="qtd-times">Quantos times vão jogar?</label>
+            <input type="number" id="qtd-times" min="2" max="10" value="2">
+        </div>
+        <button class="btn" onclick="avancarParaCadastroTimes()">Avançar</button>
+    </div>
+
+    <div id="screen-cadastro" class="screen">
+        <h1>👥 Cadastro de Equipes</h1>
+        <h3 id="cadastro-titulo" style="color: var(--accent-secondary)">Configurando Time 1</h3>
+
+        <div class="form-group">
+            <label for="nome-time">Nome do Time</label>
+            <input type="text" id="nome-time">
+        </div>
+
+        <div class="form-group">
+            <label for="qtd-integrantes">Quantos integrantes?</label>
+            <input type="number" id="qtd-integrantes" min="1" max="10" value="2" onchange="gerarInputsIntegrantes()">
+        </div>
+
+        <label>Nomes dos Integrantes</label>
+        <div id="integrantes-inputs-container" class="dinamic-inputs"></div>
+
+        <button class="btn" id="btn-salvar-time" onclick="salvarTimeAtual()">Salvar Time e Continuar</button>
+    </div>
+
+    <div id="screen-jogo" class="screen">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <span id="label-rodada" style="font-weight: 800; color: var(--text-muted); letter-spacing: 1px;">RODADA 1</span>
+            <button class="btn btn-secondary" style="width: auto; padding: 10px 20px; margin: 0; font-size: 0.85rem;" onclick="encerrarJogoVoluntario()">Parar Jogo</button>
+        </div>
+
+        <div class="card-info">
+            <div id="jogo-time-badge" class="badge-time">TIME A</div>
+            <div id="jogo-participante" class="player-name">Participante</div>
+            <div class="pontos-badge">Valendo <span id="jogo-pontos" style="font-size: 1.3rem; color: #fff">3</span> Pontos!</div>
+            <div id="jogo-desafio" class="desafio-box">"Carregar um objeto na testa por 15 segundos"</div>
+
+            <div class="timer-container">
+                <div id="timer-display" class="timer-text">01:00</div>
+                <div class="progress-bar-bg">
+                    <div id="timer-bar" class="progress-bar-fill"></div>
+                </div>
+            </div>
+        </div>
+
+        <h3>Qual foi o resultado?</h3>
+        <div class="action-grid">
+            <button class="btn-action btn-success" onclick="computarRodada(1)">✅ Cumpriu</button>
+            <button class="btn-action btn-warning" onclick="computarRodada(2)">⚠️ Falhou</button>
+            <button class="btn-action btn-danger" onclick="computarRodada(3)">❌ Recusou</button>
+        </div>
+
+        <div class="placar-container">
+            <h2>📊 Classificação ao Vivo</h2>
+            <div id="placar-dinamico"></div>
+        </div>
+    </div>
+
+    <div id="screen-fim" class="screen">
+        <h1>🏆 Vitória Presidencial!</h1>
+        <div class="podio-final">
+            👑 <span id="winner-name">Time Campeão</span>
+        </div>
+        <p style="text-align: center; color: var(--text-muted); margin-bottom: 35px;">
+            Partida salva com sucesso no histórico do console.
+        </p>
+
+        <h2>📊 Placar Final</h2>
+        <div id="placar-final-list" style="margin-bottom: 30px;"></div>
+
+        <button class="btn" onclick="reiniciarJogo()">Jogar Novamente</button>
+    </div>
+</div>
+
+<script>
+    const PONTOS_PARA_VENCER = 50;
+    const TEMPO_PADRAO_SEGUNDOS = 60;
+
+    const DESAFIOS = [
+        "Cantar uma música por 30 segundos", "Fazer uma imitação engraçada",
+        "Contar uma piada", "Dançar por 20 segundos", "Fazer uma mímica",
+        "Falar um trava-língua três vezes seguidas", "Inventar uma história curta",
+        "Fazer um elogio criativo para alguém", "Equilibrar um objeto por 15 segundos",
+        "Fazer uma apresentação engraçada de 30 segundos", "Fazer 10 polichinelos",
+        "Falar sem rir por 30 segundos", "Imitar um animal escolhido pelo grupo",
+        "Fazer uma pose engraçada por 15 segundos", "Falar o alfabeto de trás para frente em 30 segundos",
+        "Ficar em um pé só com os olhos fechados por 20 segundos",
+        "Desenhar um animal com a mão não dominante em 30 segundos", "Tentar lamber o próprio cotovelo",
+        "Falar uma palavra longa de trás para frente (ex: PARALELO)",
+        "Fazer uma rima improvisada com o nome de alguém do grupo",
+        "Contar de 1 a 20 pulando os números múltiplos de 3", "Imitar uma estátua por 30 segundos sem piscar",
+        "Fazer um som de instrumento musical apenas com a boca",
+        "Elogiar o time adversário de 3 formas diferentes e rápidas",
+        "Segurar o riso enquanto o grupo faz caretas por 20 segundos",
+        "Bater palma no ritmo de uma música para o grupo adivinhar",
+        "Falar por 30 segundos usando apenas sussurros", "Andar em linha reta de costas olhando para o teto",
+        "Fazer uma propaganda engraçada de um objeto que está na sala",
+        "Dizer 5 coisas vermelhas que você está vendo agora em 10 segundos",
+        "Fazer uma imitação de um robô dançando", "Gesticular como um maestro regendo uma orquestra maluca",
+        "Falar uma frase inteira sem mover os lábios", "Contar uma curiosidade bizarra que você sabe",
+        "Fazer 5 agachamentos enquanto recita um poema ou música",
+        "Imitar um locutor de rádio ou de futebol por 20 segundos",
+        "Desenhar um círculo no ar com o pé direito e um quadrado com a mão direita",
+        "Ficar sem falar a palavra 'NÃO' por duas rodadas completas",
+        "Completar o desafio de olhar fixamente para um adversário sem rir",
+        "Dizer 3 palavras que rimem com 'computador' em 5 segundos"
+    ];
+
+    let listaDesafiosDisponiveis = [...DESAFIOS];
+    let totalTimesParaCadastrar = 0;
+    let timeContadorAtual = 1;
+    let times = {};
+    let ordemTimes = [];
+    let rodada = 1;
+    let ultimoDesafio = null;
+    let timeDaVez = "";
+    let pontosDaVez = 0;
+
+    let tempoRestante = 0;
+    let tempoTotalDesafio = 0;
+    let intervaloCronometro = null;
+
+    function mudeTela(screenId) {
+        const screens = document.querySelectorAll('.screen');
+        screens.forEach(s => s.classList.remove('active'));
+
+        setTimeout(() => {
+            const activeScreen = document.getElementById(screenId);
+            activeScreen.classList.add('active');
+        }, 50);
+    }
+
+    function avancarParaCadastroTimes() {
+        totalTimesParaCadastrar = parseInt(document.getElementById('qtd-times').value);
+        if (isNaN(totalTimesParaCadastrar) || totalTimesParaCadastrar < 2) {
+            alert("Digite um número válido de times (Mínimo 2).");
+            return;
+        }
+        timeContadorAtual = 1;
+        times = {};
+        prepararFormularioCadastroTime();
+        mudeTela('screen-cadastro');
+    }
+
+    function prepararFormularioCadastroTime() {
+        document.getElementById('cadastro-titulo').innerText = `Configurando Time ${timeContadorAtual} de ${totalTimesParaCadastrar}`;
+        document.getElementById('nome-time').value = `Time ${String.fromCharCode(64 + timeContadorAtual)}`;
+        document.getElementById('qtd-integrantes').value = 2;
+        gerarInputsIntegrantes();
+
+        document.getElementById('btn-salvar-time').innerText = (timeContadorAtual === totalTimesParaCadastrar)
+            ? "⚡ Iniciar Grande Arena"
+            : "Salvar Time e Continuar";
+    }
+
+    function gerarInputsIntegrantes() {
+        const qtd = parseInt(document.getElementById('qtd-integrantes').value) || 1;
+        const container = document.getElementById('integrantes-inputs-container');
+        container.innerHTML = "";
+
+        for (let i = 1; i <= qtd; i++) {
+            const input = document.createElement('input');
+            input.type = "text";
+            input.placeholder = `Nome do Integrante ${i}`;
+            input.className = "input-integrante";
+            input.style.marginBottom = "12px";
+            input.value = `Jogador ${i}`;
+            container.appendChild(input);
+        }
+    }
+
+    function salvarTimeAtual() {
+        const nomeTime = document.getElementById('nome-time').value.trim();
+        if (!nomeTime) { alert("O time precisa de um nome!"); return; }
+        if (times[nomeTime]) { alert("Já existe um time com esse nome!"); return; }
+
+        const inputs = document.querySelectorAll('.input-integrante');
+        let integrantes = [];
+        for (let input of inputs) {
+            let nome = input.value.trim();
+            if (!nome) { alert("Preencha o nome de todos os integrantes!"); return; }
+            if (integrantes.includes(nome)) { alert(`O nome '${nome}' está duplicado!`); return; }
+            integrantes.push(nome);
+        }
+
+        times[nomeTime] = { integrantes: integrantes, pontos: 0 };
+
+        if (timeContadorAtual < totalTimesParaCadastrar) {
+            timeContadorAtual++;
+            prepararFormularioCadastroTime();
+        } else {
+            iniciarPartida();
+        }
+    }
+
+    function iniciarPartida() {
+        ordemTimes = Object.keys(times);
+        ordemTimes.sort(() => Math.random() - 0.5);
+        rodada = 1;
+        ultimoDesafio = null;
+
+        atualizarPlacarInterface();
+        proximaRodada();
+        mudeTela('screen-jogo');
+    }
+
+    function descobrirTempoDoDesafio(textoDesafio) {
+        const regexSegundos = /(\d+)\s*segundos/i;
+        const correspondencia = textoDesafio.match(regexSegundos);
+        return correspondencia ? parseInt(correspondencia[1]) : TEMPO_PADRAO_SEGUNDOS;
+    }
+
+    function iniciarTimer(segundos) {
+        clearInterval(intervaloCronometro);
+        tempoRestante = segundos;
+        tempoTotalDesafio = segundos;
+
+        const display = document.getElementById('timer-display');
+        const barra = document.getElementById('timer-bar');
+
+        display.classList.remove('critical');
+        barra.classList.remove('critical');
+
+        atualizarVisualTimer(tempoRestante, tempoTotalDesafio);
+
+        intervaloCronometro = setInterval(() => {
+            tempoRestante--;
+            atualizarVisualTimer(tempoRestante, tempoTotalDesafio);
+
+            // Menos de 5 segundos entra em estado crítico com animação css ativa
+            if (tempoRestante <= 5) {
+                display.classList.add('critical');
+                barra.classList.add('critical');
+            }
+
+            if (tempoRestante <= 0) {
+                clearInterval(intervaloCronometro);
+                computarRodada(2); // Computa falha automática por tempo estourado
+            }
+        }, 1000);
+    }
+
+    function atualizarVisualTimer(restante, total) {
+        const minutos = Math.floor(restante / 60);
+        const segundos = restante % 60;
+        document.getElementById('timer-display').innerText =
+            `${String(minutos).padStart(2, '0')}:${String(segundos).padStart(2, '0')}`;
+
+        const porcentagem = (restante / total) * 100;
+        document.getElementById('timer-bar').style.width = `${porcentagem}%`;
+    }
+
+    function proximaRodada() {
+        document.getElementById('label-rodada').innerText = `RODADA Nº ${rodada}`;
+        timeDaVez = ordemTimes[(rodada - 1) % ordemTimes.length];
+
+        const listaJogadores = times[timeDaVez].integrantes;
+        const participante = listaJogadores[Math.floor(Math.random() * listaJogadores.length)];
+
+        if (listaDesafiosDisponiveis.length === 0) {
+            listaDesafiosDisponiveis = [...DESAFIOS];
+        }
+
+        let desafioEscolhido = "";
+        while (true) {
+            const index = Math.floor(Math.random() * listaDesafiosDisponiveis.length);
+            desafioEscolhido = listaDesafiosDisponiveis[index];
+            if (desafioEscolhido !== ultimoDesafio || listaDesafiosDisponiveis.length === 1) {
+                ultimoDesafio = desafioEscolhido;
+                listaDesafiosDisponiveis.splice(index, 1);
+                break;
+            }
+        }
+
+        pontosDaVez = Math.floor(Math.random() * 6) + 1;
+
+        document.getElementById('jogo-time-badge').innerText = `VEZ DO ${timeDaVez.toUpperCase()}`;
+        document.getElementById('jogo-participante').innerText = participante;
+        document.getElementById('jogo-pontos').innerText = pontosDaVez;
+        document.getElementById('jogo-desafio').innerText = `"${desafioEscolhido}"`;
+
+        const tempoDefinido = descobrirTempoDoDesafio(desafioEscolhido);
+        iniciarTimer(tempoDefinido);
+    }
+
+    function computarRodada(resultadoOpcao) {
+        clearInterval(intervaloCronometro);
+
+        if (resultadoOpcao === 1) {
+            times[timeDaVez].pontos += pontosDaVez;
+        } else if (resultadoOpcao === 2) {
+            let perda = Math.floor(pontosDaVez / 2);
+            times[timeDaVez].pontos = Math.max(0, times[timeDaVez].pontos - perda);
+        } else {
+            times[timeDaVez].pontos = Math.max(0, times[timeDaVez].pontos - pontosDaVez);
+        }
+
+        atualizarPlacarInterface();
+
+        let lider = obterLiderAtual();
+        if (times[lider].pontos >= PONTOS_PARA_VENCER) {
+            finalizarJogo(lider, "Vitória por Pontuação!");
+            return;
+        }
+
+        rodada++;
+        proximaRodada();
+    }
+
+    function obterLiderAtual() {
+        return Object.keys(times).reduce((a, b) => times[a].pontos > times[b].pontos ? a : b);
+    }
+
+    function atualizarPlacarInterface() {
+        const container = document.getElementById('placar-dinamico');
+        container.innerHTML = "";
+        let lider = obterLiderAtual();
+        let ordenadoPorPontos = Object.keys(times).sort((a,b) => times[b].pontos - times[a].pontos);
+
+        ordenadoPorPontos.forEach(nome => {
+            const item = document.createElement('div');
+            item.className = `placar-item ${nome === lider && times[lider].pontos > 0 ? 'lider' : ''}`;
+            const isLider = nome === lider && times[lider].pontos > 0;
+            item.innerHTML = `
+                <div>${isLider ? '<span class="podium-icon">👑</span>' : ''}<strong>${nome}</strong></div>
+                <div>${times[nome].pontos} pts</div>
+            `;
+            container.appendChild(item);
+        });
+    }
+
+    function encerrarJogoVoluntario() {
+        let lider = obterLiderAtual();
+        finalizarJogo(lider, "Jogo encerrado voluntariamente!");
+    }
+
+    function finalizarJogo(vencedor, motivo) {
+        clearInterval(intervaloCronometro);
+        document.getElementById('winner-name').innerText = `${vencedor} (${times[vencedor].pontos} pts)`;
+
+        const containerFinal = document.getElementById('placar-final-list');
+        containerFinal.innerHTML = "";
+
+        let ordenado = Object.keys(times).sort((a,b) => times[b].pontos - times[a].pontos);
+        ordenado.forEach((nome, idx) => {
+            const div = document.createElement('div');
+            div.className = "placar-item";
+            div.innerHTML = `<div>#${idx+1} <strong>${nome}</strong></div> <div>${times[nome].pontos} pontos</div>`;
+            containerFinal.appendChild(div);
+        });
+
+        mudeTela('screen-fim');
+    }
+
+    function reiniciarJogo() {
+        mudeTela('screen-setup');
+    }
+</script>
+</body>
+</html>
